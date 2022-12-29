@@ -3,11 +3,11 @@ import torch
 from PIL import Image
 import torch.nn.functional as F
 from torchvision import transforms as T
-from PIL import Image
 import pathlib
 import argparse
 import io
 from flask import Flask, render_template, request, redirect, jsonify
+from flask_cors import CORS
 
 
 IMAGENET_MEAN = 0.485, 0.456, 0.406
@@ -26,6 +26,7 @@ def classify_transforms(size=640):
 
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/v1/thalassemia-detection', methods=["POST"])
 def predictThalassemia():
