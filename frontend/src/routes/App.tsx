@@ -25,9 +25,6 @@ function App() {
       : null
     : null
 
-  console.log(imageSrc !== noimage);
-
-
   const handleFileUpload = async (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault()
     const image = e.currentTarget.files?.item(0)
@@ -52,27 +49,38 @@ function App() {
     }
 
     setLoading(true)
-    const response = await axios.post<Response>('http://127.0.0.1:3000/v1/thalassemia-detection', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      onUploadProgress: (progressEvent) => {
-        // if (progressEvent.total)
-        //   console.log(progressEvent.loaded / progressEvent.total)
-      },
-    })
+    try {
+      const response = await axios.post<Response>(`${import.meta.env.VITE_API_BASE_URL}/v1/thalassemia-detection`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: (progressEvent) => {
+          // if (progressEvent.total)
+          //   console.log(progressEvent.loaded / progressEvent.total)
+        },
+      })
+      if (response.data.success) {
+        setResult(response.data.results)
+      } else {
+        throw new Error(response.data.error)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+        setTimeout(() => setError(''), 5000)
+      }
+    }
     setLoading(false)
 
-    if (response.data.success) {
-      setResult(response.data.results)
-    } else {
-      setError(response.data.error)
-    }
   }
 
   return (
     <div className="h-full w-full">
-      {error && <div>{error}</div>}
+      {error && <div
+        className='absolute inset-0 grid place-items-center bg-red-500 bg-opacity-75 text-white z-50'
+      >
+        {error}
+      </div>}
 
       {loading && <div
         className='absolute inset-0 grid place-items-center bg-slate-500 bg-opacity-75 z-50'
@@ -94,7 +102,7 @@ function App() {
         </div>
         <div className='flex items-center justify-center flex-1'>
           <div className='text-2xl'>
-            {imageSrc !== noimage && (confirmedThalassemiaType != null
+            {imageSrc !== noimage && !loading && (confirmedThalassemiaType != null
               ? confirmedThalassemiaType === 'normal'
                 ? <p>You don't have thalassemia</p>
                 : <p>You have {confirmedThalassemiaType} thalassemia. Please get consultation from a doctor.</p>
