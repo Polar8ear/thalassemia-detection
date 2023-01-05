@@ -30,7 +30,7 @@ function Intro() {
   }
 
   const handleStart = () => {
-    return navigate('/')
+    return navigate('/system')
   }
 
   return (
