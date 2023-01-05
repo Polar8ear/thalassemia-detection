@@ -88,8 +88,12 @@ function App() {
         Loading...
       </div>}
 
-      <div className='flex flex-col justify-center items-center md:flex-row h-full lg:mx-52'>
-        <div className='flex flex-col justify-center items-center w-full mx-4 max-w-sm flex-1'>
+      <h1
+        className='text-4xl text-center font-bold mt-8'
+      >Thalassemia Detection System</h1>
+
+      <div className='flex flex-col justify-center items-center md:flex-row h-full lg:mx-52 mx-4'>
+        <div className='flex flex-col justify-center items-center w-full max-w-sm flex-1'>
           <img
             className='object-contain mx-8 my-2 rounded-lg aspect-square overflow-clip border border-slate-600'
             src={imageSrc}
@@ -101,7 +105,7 @@ function App() {
           <p>Upload a microscopic picture of blood to detect thalassemia.</p>
         </div>
         <div className='flex items-center justify-center flex-1'>
-          <div className='text-2xl'>
+          <div className='text-2xl px-8'>
             {imageSrc !== noimage && !loading && (confirmedThalassemiaType != null
               ? confirmedThalassemiaType === 'normal'
                 ? <p>You don't have thalassemia</p>
